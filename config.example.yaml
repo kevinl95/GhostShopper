@@ -1,0 +1,33 @@
+# GhostShopper example config. Copy to config.yaml and edit.
+# This file holds no secrets. Secrets come from environment variables:
+#   NTFY_ACCESS_TOKEN   ntfy access token for both topics (Pi)
+#   AWS credentials     the invoke-only credential created by the CDK stack (Pi)
+# Unknown keys (for example "password" or "api_key") are rejected on purpose.
+
+# Safe default: the buyer stops before the final Place Order click.
+dry_run: true
+
+# Total of orders in state "placed" today, checked before every purchase.
+daily_spend_cap: 25.00
+
+ntfy:
+  url: https://ntfy.sh
+  # Use long random topic names. Both topics should also require the access token.
+  notification_topic: gs-notify-CHANGE-ME
+  reply_topic: gs-reply-CHANGE-ME
+
+buyer:
+  region: us-west-2
+  runtime_arn: arn:aws:bedrock-agentcore:us-west-2:111122223333:runtime/ghostshopper_buyer-abc123
+  endpoint_name: ghostshopper_live
+
+# Keyed by the button's MAC address (any case, colons or hyphens). Find it with `undash discover`.
+buttons:
+  "ac:63:be:12:34:56":
+    name: Paper towels
+    asin: B000000000
+    quantity: 1
+    max_price: 12.50          # per unit, USD
+    cooldown_days: 14
+    allow_substitutes: false
+    # debounce_seconds: 30    # optional, default 30

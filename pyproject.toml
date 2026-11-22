@@ -63,6 +63,10 @@ src = ["src", "tests"]
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "B", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+# Operator scripts print long prose lines.
+"infra/spikes/*.py" = ["E501"]
+
 [tool.mypy]
 python_version = "3.10"
 plugins = ["pydantic.mypy"]
@@ -70,3 +74,7 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = ["ghostshopper.rules.*", "ghostshopper.config.*"]
 strict = true
+
+[[tool.mypy.overrides]]
+module = ["boto3", "boto3.*", "botocore", "botocore.*", "scapy", "scapy.*"]
+ignore_missing_imports = true

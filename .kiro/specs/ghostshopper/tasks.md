@@ -39,18 +39,18 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
     - **Property 26: MAC normalization**
     - **Validates: Requirements 17.6, 17.7**
 
-- [ ] 4. AWS spikes 2 to 4 (before the Buyer runtime and packaging)
-  - [ ] 4.1 Write the spike 2 script `infra/spikes/spike2_profile_start.py`
+- [x] 4. AWS spikes 2 to 4 (before the Buyer runtime and packaging)
+  - [x] 4.1 Write the spike 2 script `infra/spikes/spike2_profile_start.py`
     - Start a session with `browser_session(..., profile_configuration={"profileIdentifier": ...})` in the pinned SDK version and check that the saved Amazon cookies are restored. Fall back to `start_browser_session(profileConfiguration=...)` plus a manual `BrowserClient` if the helper rejects the argument
     - Write the result to `infra/spikes/results/spike2.md`
     - _Requirements: 12.3, 13.4_
 
-  - [ ] 4.2 Write the spike 3 script `infra/spikes/spike3_direct_code_package.py`
+  - [x] 4.2 Write the spike 3 script `infra/spikes/spike3_direct_code_package.py`
     - Build the arm64 zip with `uv pip install --python-platform aarch64-manylinux2014` for the `buyer` extra, report compressed and uncompressed sizes against the 250 MB and 750 MB limits, and check that Nova Act starts over CDP without a local Chrome install
     - Record the container-artifact fallback decision in `infra/spikes/results/spike3.md`
     - _Requirements: 12.1, 12.2_
 
-  - [ ] 4.3 Write the spike 4 script `infra/spikes/spike4_verification_handoff.py`
+  - [x] 4.3 Write the spike 4 script `infra/spikes/spike4_verification_handoff.py`
     - Start a Buyer-owned session, print the region and session ID for console Live View, wait for the operator to take over and release control, and confirm that the Buyer's CDP connection reconnects
     - Write the result to `infra/spikes/results/spike4.md`
     - _Requirements: 14.1, 14.3, 14.4_
@@ -58,8 +58,8 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
 - [ ] 5. Checkpoint - Spikes 2 to 4 reviewed
   - Ensure all tests pass, ask the user if questions arise. Report any spike that failed and the chosen fallback before building dependent work.
 
-- [ ] 6. Configuration models and loader
-  - [ ] 6.1 Implement `ghostshopper.config`
+- [x] 6. Configuration models and loader
+  - [x] 6.1 Implement `ghostshopper.config`
     - Pydantic v2 models with `extra="forbid"`, `yaml.safe_load`, `dry_run` defaulting to true, ntfy settings, `buyer.*` fields, per-button fields including optional `debounce_seconds`, MAC normalization of keys, and duplicate-MAC rejection
     - Error output lists every invalid field path. Add `config.example.yaml` with no secret values
     - _Requirements: 8.7, 11.1, 17.1, 17.2, 17.3, 17.4, 17.5, 17.6, 17.7_
@@ -72,12 +72,12 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
     - Unknown keys such as `password` and `api_key`, duplicate MACs after case normalization, missing `dry_run` loads as true
     - _Requirements: 11.1, 17.3, 17.5, 17.6_
 
-- [ ] 7. Order_Rules and State_Machine
-  - [ ] 7.1 Implement `rules/decisions.py`
+- [x] 7. Order_Rules and State_Machine
+  - [x] 7.1 Implement `rules/decisions.py`
     - `decide_press`, `decide_quote`, `decide_substitute`, `decide_spend` as pure functions over `Decimal`, importing only `common/`, following the rule table
     - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 4.5, 4.6, 4.7, 5.1, 5.2, 5.3, 5.4, 9.4_
 
-  - [ ] 7.2 Implement `rules/state_machine.py`
+  - [x] 7.2 Implement `rules/state_machine.py`
     - `ALLOWED` with the 11 pairs, `TERMINAL`, `apply` raising `IllegalTransition`
     - _Requirements: 10.1, 10.2, 10.3_
 
@@ -102,17 +102,17 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
     - Run with `--cov=ghostshopper.rules --cov-fail-under=95`
     - _Requirements: 20.1, 20.2, 20.8_
 
-- [ ] 8. Buyer wire schemas and Workflow_Client
-  - [ ] 8.1 Implement `buyer/schemas.py`
+- [x] 8. Buyer wire schemas and Workflow_Client
+  - [x] 8.1 Implement `buyer/schemas.py`
     - `BuyerRequest`, `JobStatus`, `Quote`, `Substitute` (ASIN pattern `^[A-Z0-9]{10}$`), `PurchaseResult`, `approved_unit_price`, `dry_run`, and no field for a password, card number, or one-time code. No `nova_act` import
     - _Requirements: 4.3, 11.6, 13.1_
 
-  - [ ] 8.2 Implement `buyer/client.py`
+  - [x] 8.2 Implement `buyer/client.py`
     - `WorkflowClient` protocol (`start`, `poll`), `AgentCoreWorkflowClient` using `boto3` `invoke_agent_runtime` with `runtimeSessionId = gs-<order_id_hex>-<action>`, the endpoint name as `qualifier`, `user_agent_extra` set from `USER_AGENT`, `BuyerUnavailable` on any boto3 or network error, and retry of `start(purchase)` on throttling only
     - Keep the polling contract consistent with the spike 4 findings. Revisit it after spike 6 (task 13.2) and adjust the limits in task 15.2 if the results differ
     - _Requirements: 12.4, 12.5, 12.6, 15.1_
 
-  - [ ] 8.3 Add `FakeWorkflowClient` to `tests/fakes.py`
+  - [x] 8.3 Add `FakeWorkflowClient` to `tests/fakes.py`
     - Scripts `JobStatus` sequences and raises `BuyerUnavailable`. No mock store of any kind
     - _Requirements: 20.6_
 
@@ -120,20 +120,20 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
     - **Property 22: Quote schema validation**
     - **Validates: Requirements 4.3, 4.4**
 
-- [ ] 9. SQLite store, spend cap, approvals, restart recovery
-  - [ ] 9.1 Implement `agent/store.py`
+- [x] 9. SQLite store, spend cap, approvals, restart recovery
+  - [x] 9.1 Implement `agent/store.py`
     - Schema from the design (`press_log`, `orders`, `order_history`, `approvals`, `meta`), WAL, `foreign_keys=ON`, `busy_timeout` of 5 seconds, indexes, and `Store.transition` that calls the State_Machine and writes the row and history entry in one transaction. An illegal transition is logged and returns `False`
     - _Requirements: 10.2, 10.4, 13.2_
 
-  - [ ] 9.2 Implement the spend query and the atomic `approved` to `ordering` step in `agent/store.py`
+  - [x] 9.2 Implement the spend query and the atomic `approved` to `ordering` step in `agent/store.py`
     - `BEGIN IMMEDIATE`, sum of `placed` non-Dry_Run Orders for the current local day as UTC range, price times quantity, call `decide_spend`, then transition to `ordering` or `failed` / `spend_cap` in the same transaction. A lock timeout leaves the Order `approved` and logs
     - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.9, 9.10_
 
-  - [ ] 9.3 Implement `agent/approvals.py`
+  - [x] 9.3 Implement `agent/approvals.py`
     - `secrets.token_urlsafe(32)`, SHA-256 hash storage, 10-minute expiry, single-use acceptance in the same transaction as the Order transition, rejection reasons `unknown`, `used`, `expired`, `order_mismatch`, `bad_decision`, and the 5-second expiry sweeper
     - _Requirements: 6.6, 6.7, 6.8, 7.1, 7.2, 7.3, 7.4, 7.5, 7.6, 7.7_
 
-  - [ ] 9.4 Implement `agent/startup.py` restart recovery and environment checks
+  - [x] 9.4 Implement `agent/startup.py` restart recovery and environment checks
     - `ordering` to `failed` / `interrupted` with a "check the Amazon account" notification, `awaiting_approval` kept with its original `expires_at`, `pressed`, `quoted`, `approved` to `failed` / `interrupted`, terminal Orders untouched. Exit naming `NTFY_ACCESS_TOKEN` when unset
     - _Requirements: 8.8, 10.5, 10.6_
 
@@ -162,12 +162,12 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
     - Two threads attempt `approved` to `ordering` on one SQLite file and the check and transition stay serialized
     - _Requirements: 9.10_
 
-- [ ] 10. Notifier and ntfy stream
-  - [ ] 10.1 Implement `notifier/`
+- [x] 10. Notifier and ntfy stream
+  - [x] 10.1 Implement `notifier/`
     - ntfy JSON publish with `Authorization` and `User-Agent` headers, retry 3 times at 2-second spacing, approval message text, Substitute marker, Approve and Deny `http` actions with JSON body, reply parser, terminal-state notices, and the verification notice that names region and browser session ID and never contains a Live View URL
     - _Requirements: 5.5, 6.2, 6.3, 6.4, 6.5, 6.9, 8.3, 14.2_
 
-  - [ ] 10.2 Implement `agent/ntfy_stream.py`
+  - [x] 10.2 Implement `agent/ntfy_stream.py`
     - `httpx` streaming `GET {ntfy_url}/{reply_topic}/json?since=<last_id>`, first run `since=latest`, last ID stored in `meta`, backoff `min(1 * 2^n, 60)` seconds with reset after a message, each disconnect logged
     - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
 
