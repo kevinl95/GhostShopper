@@ -8,30 +8,30 @@ There is no mock store, S3 static site, or related-item browsing. Buyer interact
 
 ## Tasks
 
-- [ ] 1. Spike 1: user agent over CDP (runs first, gates Requirement 15)
-  - [ ] 1.1 Write the spike 1 operator script `infra/spikes/spike1_user_agent_cdp.py`
+- [x] 1. Spike 1: user agent over CDP (runs first, gates Requirement 15)
+  - [x] 1.1 Write the spike 1 operator script `infra/spikes/spike1_user_agent_cdp.py`
     - Standalone script with its own pinned requirements note in the file header. It does not import the `ghostshopper` package, so it can run before the scaffold exists
     - Start an `aws.browser.v1` session, attach with Playwright and Nova Act over CDP, send `Target.setAutoAttach` (`waitForDebuggerOnStart`, `flatten`) and `Emulation.setUserAgentOverride` for every page target, and apply the override to existing pages
     - Read `navigator.userAgent` and check the `user-agent` header seen by a header-echo endpoint, for the first page, a popup, and a new tab. Exit non-zero if any value lacks `Agent/ghostshopper`
     - Write a pass or fail result with the observed values to `infra/spikes/results/spike1.md`
     - _Requirements: 15.2, 15.3, 15.4_
 
-- [ ] 2. Checkpoint - Spike 1 gate
+- [x] 2. Checkpoint - Spike 1 gate
   - Run the spike with the user's AWS identity. If spike 1 fails, stop and ask the user, because the design says the project cannot meet Requirement 15 without another mechanism. Otherwise ensure all tests pass, ask the user if questions arise.
 
-- [ ] 3. Project scaffold and shared common package
-  - [ ] 3.1 Create the project scaffold and test tooling
+- [x] 3. Project scaffold and shared common package
+  - [x] 3.1 Create the project scaffold and test tooling
     - `pyproject.toml` with extras `pi`, `buyer`, `dev`, the `undash` and listener entry points, and the `src/ghostshopper/` package layout from the design (`common`, `listener`, `agent`, `rules`, `notifier`, `buyer`, `config`, `cli`)
     - Configure `pytest`, `pytest-cov`, `hypothesis` (minimum 100 examples), `pytest-socket` with network disabled, `ruff`, and `mypy --strict` for `rules/` and `config/`
     - `tests/conftest.py` that fails a test that reads AWS or Nova Act environment variables
     - _Requirements: 20.7, 12.2_
 
-  - [ ] 3.2 Implement `ghostshopper.common`
+  - [x] 3.2 Implement `ghostshopper.common`
     - `USER_AGENT` (`ghostshopper/0.1 Agent/ghostshopper`), the `Clock` protocol with a system clock, and a `FakeClock` test helper that advances without sleeping
     - Money helpers (`Decimal` to integer cents and back) and MAC normalization to lowercase colon form
     - _Requirements: 15.1, 17.7_
 
-  - [ ] 3.3 Implement the log redaction filter in `ghostshopper.common`
+  - [x] 3.3 Implement the log redaction filter in `ghostshopper.common`
     - Redact values of `NTFY_ACCESS_TOKEN`, `NOVA_ACT_API_KEY`, `AWS_SECRET_ACCESS_KEY`, `AWS_SESSION_TOKEN`, and 43-character URL-safe strings
     - _Requirements: 12.7, 13.2_
 
